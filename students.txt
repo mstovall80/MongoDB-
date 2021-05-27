@@ -1,0 +1,52 @@
+//Create a database called 'my_first_db'.
+use my_first_db
+
+//Create students collection.
+db.createCollections("students")
+
+//({name: STRING, home_state: STRING, lucky_number: NUMBER, birthday: {month: NUMBER, day: NUMBER, year: NUMBER}})
+//Create 5 students with the appropriate info.
+
+db.students.insert({name: "Mogan Freeman",home_state: "Tennessee", lucky_number:1, birthday: {month: 8, day: 19, year: 1937}})
+db.students.insert({name: "Clint Eastwood ",home_state: "California", lucky_number:2, birthday: {month: 9, day: 24, year: 1946}})
+db.students.insert({name: "Jack Black",home_state: "Tennessee", lucky_number:3, birthday: {month: 1, day: 15, year: 1972}})
+db.students.insert({name: "Tom Petty",home_state: "Florida", lucky_number:4, birthday: {month: 5, day: 23, year: 1969}})
+db.students.insert({name: "Donald Trump",home_state: "New York", lucky_number:5, birthday: {month: 11, day: 30, year: 1952}})
+
+//Get all students.
+db.students.find({})
+db.students.find({}).pretty()
+
+//Retrieve all students who are from California (San Jose Dojo) or New York (NYC Dojo).
+
+db.students.find({
+    $or: [
+        {
+            home_state: "California"
+        },
+        {
+            home_state: "New York"
+        }
+    ]
+})
+
+//Get all students whose lucky number is greater than 3
+db.students.find({lucky_number: {$gt:3}})
+
+//Get all students whose lucky number is less than or equal to 5
+db.students.find({lucky_number: {$lte:5}})
+
+//Get all students whose lucky number is between 1 and 5 (inclusive)
+db.students.find({ lucky_number : { $gte : 1, $lte : 5}});
+
+//Add a field to each student collection called 'interests' that is an ARRAY. It should contain the following entries: 'coding', 'brunch', 'MongoDB'. Do this in ONE operation.
+db.students.updateMany({}, {$set: {interests: ["coding", "brunch", "MongoDB"]}})
+
+//Add some unique interests for each particular student into each of their interest arrays
+db.students.update({_id: ObjectId("60a137f8c5b786f950dc680d")}, {$push: {interests: "Fishing"}})
+
+//Add the interest 'taxes' into someone's interest array.
+db.students.update({_id: ObjectId("60a137f8c5b786f950dc680d")}, {$push: {interests: "Taxes"}})
+
+//Remove the 'taxes' interest you just added.
+db.students.update({_id: ObjectId("60a137f8c5b786f950dc680d")}, {$pop: {interests: 1}})
